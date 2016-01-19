@@ -8,8 +8,9 @@ const webpack = require("webpack");
 const ROOT = '../../';
 
 const WEBPACK_CONFIG = PATH.resolve(__dirname, ROOT, 'tools/build/config/webpack-config.js');
+const config = require(WEBPACK_CONFIG);
 
-const compiler = webpack(require(WEBPACK_CONFIG));
+const compiler = webpack(config);
 
 const printReport = function(stats) {
     gutil.log('[webpack]', stats.toString({
@@ -21,7 +22,7 @@ const printReport = function(stats) {
     }));
 };
 
-gulp.task('build:app', function(callback) {
+gulp.task('build:app', (callback) => {
     compiler.run(function(err, stats) {
         if(err) {
             gutil.log('error', new gutil.PluginError('[webpack]', err));
@@ -32,7 +33,7 @@ gulp.task('build:app', function(callback) {
     });
 });
 
-gulp.task('build:watch:app', function(callback) {
+gulp.task('build:watch:app', (callback) => {
     compiler.watch({
         aggregateTimeout: 300
     }, function(err, stats) {

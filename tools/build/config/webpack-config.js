@@ -4,17 +4,35 @@ const webpack = require("webpack");
 
 const ROOT = '../../../';
 
-const APP_FOLDER = PATH.resolve(__dirname, ROOT, 'client/');
-const APP_ENTRY_FILE = PATH.resolve(__dirname, ROOT, APP_FOLDER, 'app.js');
+const APP_FOLDER = PATH.resolve(__dirname, ROOT, 'app/');
+const APP_ENTRY_FILE = PATH.resolve(__dirname, ROOT, APP_FOLDER, 'client.js');
 
-const BUILD_FOLDER = PATH.resolve(__dirname, ROOT, 'client/public/js/');
-const PUBLIC_PATH = '/js/';
+const BUILD_FOLDER = PATH.resolve(__dirname, ROOT, 'app/public/js/');
+const PUBLIC_PATH = '/public/js/';
 
 const BUILD_FILE = 'app.js';
 
 const ESLINT_CONFIG_FILE = PATH.resolve(__dirname, ROOT, 'tools/build/config/eslint-config.json');
 
-var webpackConfig = {
+const envConfig = {
+    development: {
+        plugins: [
+            [
+                'react-transform',
+                {
+                    transforms: [
+                        {
+                            transform: 'react-transform-catch-errors',
+                            imports: ['react', 'redbox-react']
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+};
+
+const webpackConfig = {
     entry: {
         app: APP_ENTRY_FILE
     },
@@ -37,12 +55,14 @@ var webpackConfig = {
                 query: {
                     compact: false,
                     cacheDirectory: true,
-                    presets: ['es2015', 'react']
+                    presets: ['es2015', 'react'],
+                    // env: envConfig
                 }
             }
         ]
     },
     externals: {
+        'axios': 'axios',
         'react': 'React',
         'react-router': 'ReactRouter',
         'history': 'History',
